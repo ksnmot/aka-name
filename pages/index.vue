@@ -71,6 +71,8 @@
         <v-col>{{ result.name }}</v-col>
         <v-col>{{ result.sokaku }}</v-col>
         <v-col>{{ result.jinkaku }}</v-col>
+        <v-col>{{ result.chikaku }}</v-col>
+        <v-col>{{ result.gaikaku }}</v-col>
       </v-card>
     </v-row>
   </div>
@@ -133,6 +135,24 @@ export default {
         { text: '水', number: 4 },
         { text: '久', number: 3 },
         { text: '己', number: 3 },
+        //1108追加
+        { text: '義', number: 13 },
+        { text: '羅', number: 19 },
+        { text: '紗', number: 10 },
+        { text: '綾', number: 14 },
+        { text: '工', number: 3 },
+        { text: '文', number: 4 },
+        { text: '永', number: 5 },
+        { text: '白', number: 5 },
+        { text: '礼', number: 6 },
+        { text: '光', number: 6 },
+        { text: '今', number: 4 },
+        { text: '現', number: 11 },
+        { text: '翔', number: 12 },
+        { text: '灯', number: 6 },
+        { text: '帆', number: 6 },
+        { text: '英', number: 8 },
+        { text: '穹', number: 8 },
       ],
       //新しい画数ベース
       // kanjis: [
@@ -197,11 +217,14 @@ export default {
       tempName: null,
       random3: null,
       random4: null,
+      random5: null,
       sokaku: null,
       jinkaku: null,
-      goodList: [31, 47],
+      chikaku: null,
+      gaikaku: null,
+      //goodList: [31, 47],
+      goodList: [8, 13, 18, 21, 23, 24, 31, 41, 47],
       goodList2: [8, 13, 18, 21, 23, 31, 38, 41, 47],
-      // goodList: [8, 13, 18, 21, 23, 24, 31, 38, 41, 47],
       // goodList2: [8, 13, 18, 21, 23, 31, 38, 41, 47],
     }
   },
@@ -211,9 +234,10 @@ export default {
       this.kanjis.push({ text: this.kanjis.text, number: this.kanjis.number })
     },
     calculate() {
-      for (let i = 0; i < 10000000; i++) {
+      //２文字用
+      for (let i = 0; i < 100000; i++) {
         // ランダムにkanjisから1文字選んでtemplist3文字目をに入れる
-        let count = i / 1000000
+        let count = i / 10000
         if (Number.isInteger(count)) {
           console.log(i)
         }
@@ -240,13 +264,20 @@ export default {
 
         //名前を仮格納
         this.tempName = this.temps[2].text + this.temps[3].text
-        //総画、人格ともに問題なければリザルトリストに入れる
+        //総画、人格ともに問題なければ、地画・外画計算してまとめてリザルトリストに入れる
         if (this.goodList.indexOf(this.sokaku) !== -1) {
           if (this.goodList2.indexOf(this.jinkaku) !== -1) {
+            //地画計算
+            this.chikaku = this.temps[2].number + this.temps[3].number
+            //外画数計算
+            this.gaikaku = this.temps[0].number + this.temps[3].number
+            //格納処理
             this.results.push({
               name: this.tempName,
               sokaku: this.sokaku,
               jinkaku: this.jinkaku,
+              chikaku: this.chikaku,
+              gaikaku: this.gaikaku,
             })
           }
         }
@@ -261,7 +292,70 @@ export default {
         this.tempName = null
         this.sokaku = 0
         this.jinkaku = 0
+        this.chikaku = 0
+        this.gaikaku = 0
       }
+      // //３文字用
+      // for (let i = 0; i < 100000; i++) {
+      //   // ランダムにkanjisから1文字選んでtemplist3文字目をに入れる
+      //   let count = i / 10000
+      //   if (Number.isInteger(count)) {
+      //     console.log(i)
+      //   }
+      //   // ランダムにkanjisから1文字選んでtemplist3文字目をに入れる
+      //   this.random3 = Math.floor(Math.random() * this.kanjis.length)
+      //   this.temps.push({
+      //     text: this.kanjis[this.random3].text,
+      //     number: this.kanjis[this.random3].number,
+      //   })
+      //   // ランダムにkanjisから1文字選んでtemplist4文字目を文字目に入れる
+      //   this.random4 = Math.floor(Math.random() * this.kanjis.length)
+      //   this.temps.push({
+      //     text: this.kanjis[this.random4].text,
+      //     number: this.kanjis[this.random4].number,
+      //   })
+      //   // ランダムにkanjisから1文字選んでtemplist5文字目を文字目に入れる
+      //   this.random5 = Math.floor(Math.random() * this.kanjis.length)
+      //   this.temps.push({
+      //     text: this.kanjis[this.random5].text,
+      //     number: this.kanjis[this.random5].number,
+      //   })
+      //   //総画計算
+      //   this.sokaku =
+      //     this.temps[0].number +
+      //     this.temps[1].number +
+      //     this.temps[2].number +
+      //     this.temps[3].number +
+      //     this.temps[4].number
+
+      //   //人格計算
+      //   this.jinkaku = this.temps[1].number + this.temps[2].number
+      //   //名前を仮格納
+      //   this.tempName =
+      //     this.temps[2].text + this.temps[3].text + this.temps[4].text
+      //   //総画、人格ともに問題なければリザルトリストに入れる
+      //   if (this.goodList.indexOf(this.sokaku) !== -1) {
+      //     if (this.goodList2.indexOf(this.jinkaku) !== -1) {
+      //       this.results.push({
+      //         name: this.tempName,
+      //         sokaku: this.sokaku,
+      //         jinkaku: this.jinkaku,
+      //       })
+      //     }
+      //   }
+
+      //   // リフレッシュ処理
+      //   this.random3 = null
+      //   this.random4 = null
+      //   this.random5 = null
+      //   this.temps = [
+      //     { text: '平', number: 5 },
+      //     { text: '田', number: 5 },
+      //   ]
+      //   this.tempName = null
+      //   this.sokaku = 0
+      //   this.jinkaku = 0
+      // }
 
       //重複削除ロジック
       this.results2 = this.results.filter(
